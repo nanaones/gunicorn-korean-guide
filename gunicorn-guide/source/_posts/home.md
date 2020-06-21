@@ -19,24 +19,29 @@ gunicorn 문서의 한글화를 통한 국내 사용자들의 불편을 해소�
 
 ## 로컬에서 Hexo 문서 서버 띄우기
 
+### 설치하기
 ``` shell
-
 # install 
-
 $ sudo apt update && sudo apt install -y nodejs npm
 $ sudo npm install -g hexo-cli
-
 ```
-## 포스트를 만드는 방법
+
+### 포스트( 새 페이지 )를 만드는 방법
 
 ```
 $ hexo new [layout] <title> 
-$ hexo new post '파일명'
+$ hexo new post '페이지명'
 ```
 만들어지는 파일은 `source/` 아래에 생깁니다. 
 디버그모드를 통해 적용되는 내용을 확인하면서 문서를 작성할 수 있습니다. 
 
-## 로컬에서 Hexo 서버를 디버그모드로 실행하는 방법
+### 변경사항을 반영하는 방법
+
+```
+$ hexo g
+```
+
+### 로컬에서 Hexo 서버를 디버그모드로 실행하는 방법
 ```
 $ hexo s --debug 
 ```
