@@ -6,9 +6,16 @@ tags:
 
 # Gunicorn
 
-## Guncorn 설치하기
-
-- [Giunicorn 설치하는 방법](/install/index.html)
-- [비동기 사용을 위한 추가 설치](/install/index.html#비동기-워커)
+## 설치하기
+- [설치하는 방법](/install/index.html)
+- [비동기 사용을 위한 추가 설치](/install/index.html#비동기-워커-Async-Worker)
 - [Debian/Linux에서 시스템 패키지 매니저를 사용하여 설치하기](/install/index.html#DebianGNU-Linux)
 
+
+## 실행하기
+- [실행하는 방법](/run/index.html)
+- [다른 툴과 병합하는 방법](/integration/index.html)
+
+
+## 설정하기
+- [설정하는 방법](/configure/index.html)
