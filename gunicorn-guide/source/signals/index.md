@@ -671,3 +671,197 @@ PID 파일에 사용할 파일 이름입니다.
 >
 > 자세한 내용은 차단-os-fchmod를 참조하고 이 문제를 방지할 수 있는 해결 방법을 참조하세요.
 
+
+### user
+
+-   `-u USER, --user USER`
+-   `501`
+
+프로세스의 user를 변경하고 싶을경우 사용합니다. 
+
+유효한 사용자 ID(`int`) 또는 worker process 사용자를 변경하지 않기 위해 `pwd.getpwnam(value)` 또는 `none`으로 호출하여 검색할 수 있는 사용자 이름을 설정합니다.  
+
+### group
+
+-   `-g GROUP, --group GROUP`
+-   `20`
+
+프로세스의 group을 변경하고 싶을경우 사용합니다. 
+
+유효한 사용자 ID(`int`) 또는 worker process 사용자를 변경하지 않기 위해 `pwd.getpwnam(value)` 또는 `none`으로 호출하여 검색할 수 있는 사용자 이름을 설정합니다.  
+
+### umask
+
+-   `-m INT, --umask INT`
+-   `0`
+
+Gunicorn이 작성한 파일의 파일 모드에 대한 비트 마스크입니다.  
+
+이설정은 유닉스 소켓 권한에 영향을 미칩니다.  
+
+`os.umask(mode)` 호출에 유효한 값 또는 `int(value, 0)` `0`과 호환되는 문자열 (`0`은 파이썬이 베이스를 추측한다는 의미여서 `0`, `0xFF`, `0022`와 같은 값은 십진수, 16진수, 8진수 표시에 유효합니다.)  
+
+
+### initgroups
+
+-   `--initgroups`
+-   `False`
+
+`True` 로 설정된 경우, 지정된 사용자 이름이 구성원인 모든 그룹과 지정된 그룹 ID 를 사용하여 작업자 프로세스의 그룹 엑세스 목록을 설정해야 합니다.   
+
+
+### tmp\_upload\_dir
+
+-   `None`
+
+읽을 때 임시 요청 데이터를 저장할 디렉토리입니다.
+
+삭제 예정인 변수입니다. 
+
+이 경로는 Gunicorn 작업자에 대해 설정된 프로세스 권한으로 쓰기가 가능해야 합니다. 지정되지 않으면 Gunicorn은 시스템에서 생성된 임시 디렉토리를 선택할 것입니다.
+
+### secure\_scheme\_headers
+
+-   `{'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}`
+
+프론트 엔드 프록시가 HTTPS 요청을 나타내기 위해 사용하는 헤더 및 값을 포함하는 dictionary 자료형을 말합니다.  
+이를 통해 Gunicorn 에게 `wsgi.url_scheme`을 `https`로 설정하도록 지시하므로, 사용자의 요청이 안전하다는것을 알 수 있습니다. 
+
+dictionary는 대문자 헤더 이름을 문자열 값에 매핑해야 합니다. 값 비교는 헤더 이름과 달리 대소문자를 구분하므로 HTTPS 요청을 처리할 때 프런트 엔드 프록시가 보내는 것과 정확히 일치하는지 확인해야 합니다.
+
+프론트 엔드 프록시 구성이 여기서 정의한 헤더를 클라이언트에서 직접 전달하지 않도록 하는 것이 중요합니다.
+
+### forwarded\_allow\_ips
+
+-   `--forwarded-allow-ips STRING`
+-   `127.0.0.1`
+
+설정된 보안 헤더를 처리 할 수있는 프론트 엔드의 IP입니다. (쉼표로 구분).
+
+프런트 엔드 IP의 확인을 비활성화하려면 '*'로 설정하면 됩니다.(프론트 엔드 IP 주소를 미리 알 수는 없지만 환경을 신뢰하는 설정에 유용함).
+
+'FORWARDED_ALLOW_IPS' 환경 변수의 기본값은 환경변수를 따릅니다.  정의되지 않은 경우 기본값은 "127.0.0.1" 입니다.   
+
+### pythonpath
+
+-   `--pythonpath STRING`
+-   `None`
+
+Python 경로에 추가 할 쉼표로 구분 된 디렉토리 목록입니다.  
+
+e.g. `'/home/djangoprojects/myproject,/home/python/mylibrary'`.
+
+### paste
+
+-   `--paste STRING, --paster STRING`
+-   `None`
+
+PasteDeploy 구성 파일을 로드하는 경우, 인수에는 설정 파일에서 앱 섹션 이름(예: `production`) 뒤에 `#` 기호가 포함될 수 있습니다.
+
+e.g. `production.ini#admin.`
+
+
+현재, 대체 서버 블록 사용은 지원되지 않습니다.  
+대신 명령줄 인수를 사용하여 서버 구성을 제어하세요.  
+
+
+### proxy\_protocol
+
+-   `--proxy-protocol`
+-   `False`
+
+프록시 프로토콜 감지를 활성화합니다 (PROXY 모드).
+
+
+HTTP와 프록시를 함께 사용할 수 있습니다.
+stunnel을 HTTPS 프론트 엔드로, Gunicorn을 HTTP 서버 로 사용하는 데 유용 할 수 있습니다.
+
+PROXY protocol:
+<http://haproxy.1wt.eu/download/1.5/doc/proxy-protocol.txt>
+
+stunnel 설정 사용예 :
+
+    [https]
+    protocol = proxy
+    accept  = 443
+    connect = 80
+    cert = /etc/ssl/certs/stunnel.pem
+    key = /etc/ssl/certs/stunnel.key
+
+### proxy\_allow\_ips
+
+-   `--proxy-allow-from`
+-   `127.0.0.1`
+
+프록시 요청을 수락할 수 있는 프론트 엔드의 IP(쉼표 구분)
+
+프런트 엔드 IP의 확인을 비활성화하려면 `*`로 설정하세요 (프론트 엔드 IP 주소를 미리 알 수는 없지만 환경을 신뢰하는 설정에 유용함).
+
+### raw\_paste\_global\_conf
+
+-   `--paste-global CONF`
+-   `[]`
+
+PasteDeploy 전역 구성 변수를 `key=value`양식으로 설정합니다 .
+이 옵션은 여러 번 지정할 수 있습니다.  
+변수는 PasteDeploy 진입 점으로 전달됩니다. 예:  
+
+    $ gunicorn -b 127.0.0.1:8000 --paste development.ini --paste-global FOO=1 --paste-global BAR=2
+
+### strip\_header\_spaces
+
+-   `--strip-header-spaces`
+-   `False`
+
+헤더 이름과 `:` 사이에 있는 공간을 분리해 줍니다.
+
+이는 취약점을 유발하는 것으로 알려져 있으며, HTTP / 1.1 표준을 준수하지 않습니다. 
+[다음을 참고하세요.](https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn) 
+
+
+Server Socket
+-------------
+
+### bind
+
+-   `-b ADDRESS, --bind ADDRESS`
+-   `['127.0.0.1:8000']`
+
+바인딩 할 소켓입니다.
+
+
+형식: `HOST`, `HOST:PORT`, `unix:PATH`, `fd://FD`. IP는 유효한  `HOST`를 의미합니다.
+
+여러 주소를 바인딩 할 수 있습니다. ex.:
+
+    $ gunicorn -b 127.0.0.1:8000 -b [::1]:8000 test:app
+
+ipv6 및 ipv4 인터페이스 전체 에서 localhost의 test : app 응용 프로그램을 바인딩합니다.
+ 
+만약 `PORT` 환경변수가 정의되어있다면, 기본설정은 `['0.0.0.0:$PORT']` 입니다.   
+그렇지 않다면  기본 설정은 `['127.0.0.1:8000']` 입니다.   
+
+### backlog
+
+-   `--backlog INT`
+-   `2048`
+
+보류중인 최대 연결 수입니다.    
+
+이 변수는 서비스를 받기 위해 대기할 수 있는 클라이언트 수를 말합니다. 이 숫자를 초과하면 클라이언트가 연결을 시도할 때 오류가 발생합니다. 이는 상당한 부하를 받는 서버에만 영향을 미칩니다.  
+
+양의 정수여야 하며, 일반적으로 64-2048의 범위로 설정합니다.  
+
+Worker Processes
+----------------
+
+### workers
+
+-   `-w INT, --workers INT`
+-   `1`
+
+요청을 처리하기위한 작업자 프로세스 수입니다.  
+
+일반적으로 `2-4 x $(NUM_CORES)` 범위의 양의 정수를 사용합니다. 특정 응용프로그램의 작업 부하에 가장 적합한 항목을 찾기 위해 이 항목을 약간 변경하여 사용하세요.
+
+기본으로, `WEB_CONCURRENCY`환경변수를 다릅니다. 만약 설정되어있지 않다면 `1`의 기본값을 가집니다.   
