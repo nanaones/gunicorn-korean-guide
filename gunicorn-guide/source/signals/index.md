@@ -804,7 +804,9 @@ stunnel 설정 사용예 :
 
 PasteDeploy 전역 구성 변수를 `key=value`양식으로 설정합니다 .
 이 옵션은 여러 번 지정할 수 있습니다.  
-변수는 PasteDeploy 진입 점으로 전달됩니다. 예:  
+변수는 PasteDeploy 진입 점으로 전달됩니다.  
+
+예:  
 
     $ gunicorn -b 127.0.0.1:8000 --paste development.ini --paste-global FOO=1 --paste-global BAR=2
 
@@ -865,3 +867,127 @@ Worker Processes
 일반적으로 `2-4 x $(NUM_CORES)` 범위의 양의 정수를 사용합니다. 특정 응용프로그램의 작업 부하에 가장 적합한 항목을 찾기 위해 이 항목을 약간 변경하여 사용하세요.
 
 기본으로, `WEB_CONCURRENCY`환경변수를 다릅니다. 만약 설정되어있지 않다면 `1`의 기본값을 가집니다.   
+
+### worker\_class
+
+-   `-k STRING, --worker-class STRING`
+-   `sync`
+
+사용할 워커의 타입입니다. 
+
+기본 클래스는 `sync` 입니다. 이는, 대부분의 "normal" 타입의 워크로드를 처리합니다. 
+다른 워커중 하나를 선책하려는 경우, 디자인 문서를 통해 사전 정보를 취득하고, 상황에 맞는 워커를 사용하여야 합니다. 다른 워커를 사용하는데 필요한 라이브러리는 setuptools의`extras_require` 기능을 사용하여 설치할 수 있습니다.
+
+다음은 사용할 수 있는 워커 클래스입니다:
+
+-   `sync`
+-   `eventlet` - 의존성 패키지 eventlet \>= 0.24.1 ( 혹은, 다음 명령어로 설치 
+    `pip install gunicorn[eventlet]`)
+-   `gevent` - 의존성 패키지 gevent \>= 1.4 ( 혹은, 다음 명령어로 설치 
+    `pip install gunicorn[gevent]`)
+-   `tornado` - 의존성 패키지 tornado \>= 0.2 ( 혹은, 다음 명령어로 설치 
+    `pip install gunicorn[tornado]`)
+-   `gthread` - Python2 일경우 패키지를 설치하여야 합니다.
+    ( 혹은, 다음 명령어로 설치 `pip install gunicorn[gthread]`)
+
+선택적으로, Gunicorn 에게 Gunicorn의 하위 클래스에 파이썬 경로를 부여함으로서, `gunicorn.workers.base.Worker` 가 사용할 파이썬의 경로를 지정항 수 있습니다.
+이 대체 구문은 `gunicorn.workers.ggevent.GeventWorker`라는 gevent class를 로드할 것 입니다.  
+
+
+### threads
+
+-   `--threads INT`
+-   `1`
+
+요청을 처리하기 위한 워커의 스레드 수입니다.
+
+각 워커는 지정된 스레드 수를 가집니다. 
+
+일반적으로 2-4 x 달러(NUM_CORES) 범위의 양의 정수. 특정 응용프로그램의 작업 부하에 가장 적합한 항목을 찾기 위해 이 항목을 약간 변경하십시오.
+
+일반적으로, 스레드 수는 `2-4 x $(NUM_CORES)` 범위의 양의 정수를 사용합니다. 운영하는 응용프로그램의 작업 부하에 가장 적합한 스레드 수를 찾기 위해서는 직접 스레드 수를 변경하며 찾는것을 권장합니다. 
+
+값이 지정되지 않는다면, 기본값으로 `1`이 지정됩니다.   
+
+이 설정은 `Gthread`워커일 경우에만 적용됩니다.   
+
+
+> **note**
+>
+> `sync` 타입의 워커를 사용하지만 Thread 옵션을 설정하고, 스레드의 수가 1을 넘는 경우, 
+> `gthread` 워커가 대신 사용됩니다.
+
+### worker\_connections
+
+-   `--worker-connections INT`
+-   `1000`
+
+최대 동시 클라이언트 수입니다.  
+
+**이 설정은 Eventlet 및 Gevent worker 유형에만 영향을 끼칩니다.**  
+
+
+### max\_requests
+
+-   `--max-requests INT`
+-   `0`
+
+재시작하기 전에 워커가 처리할 최대 요청 수입니다.
+
+값이 0보다 크게 설정되면 워커가 자동으로 재시작하기 전에 처리할 요청 수가 제한됩니다. 
+**메모리 누수의 피해를 줄이는 데 도움을 주는 간단한 방법이다.**
+
+
+이 값이 0(기본값)으로 설정되어 있으면 워커의 자동 재시작이 비활성화됩니다.
+
+
+### max\_requests\_jitter
+
+-   `--max-requests-jitter INT`
+-   `0`
+
+*max\_requests* 설정에 추가할 최대 지터.
+
+지터는 각 워커별로 랜덤하게 `randint(0, max_requests_jitter)` 대로 재시작을 유발합니다.
+이는, 모든 워커가 동시에 다시 시작되지 않도록 막아주는 역할을 수행합니다.
+
+
+### timeout
+
+-   `-t INT, --timeout INT`
+-   `30`
+
+지정된 초 이상 응답이 없는 워커는 종료된 후, 재시작됩니다. 
+
+값은 양수 또는 0이다. 0으로 설정하면 모든 작업자의 시간 초과를 완전히 비활성화하여 무한한 시간 초과의 효과가 있다
+
+값은 양수 혹은 0입니다. 0으로 설정하게 되면 모든 워커의 timeout을 완전히 비활성화 하며, timeou을 따로 체크하지 않습니다. 
+
+일반적으로는 30초가 충분합니다. 동기 워커에게 미치는 영향이 확실할 경우에만 이 값을 높게 설정하세요.
+비동기 워커에게는 이 설정이 워커 프로세스가 여전히 의사소통중이고, 단일 요청을 처리하는데 필요한 시간에 얽메이지 않는다는것을 의미합니다. 
+
+### graceful\_timeout
+
+-   `--graceful-timeout INT`
+-   `30`
+
+정상인 워커의 재시작 시간.
+
+재시작 신호를 받은 워커들은 재시작한 이후부터 옵션에서 지정된 시간대로 수명을 지닙니다. 
+지정된 시간을 초과하여 생존한 워커들은 모두 강제적으로 프로세스를 `kill` 합니다.
+
+
+### keepalive
+
+-   `--keep-alive INT`
+-   `2`
+
+Keep-Alive 연결에서 요청을 대기하는 시간(초)를 말합니다. 
+
+일반적으로 클라이언트와 직접 연결된 서버의 경우(예: 별도의 로드 밸런서가 없는 경우) 1~5초 범위에서 설정됩니다. Gunicorn이 로드밸런서 뒤에 배치되었을 때, 이 값을 더 높은 값으로 설정하는 것이 종종 옳습니다.
+
+
+> **note**
+>
+> `sync` worker does not support persistent connections and will ignore
+> this option.
