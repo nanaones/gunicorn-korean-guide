@@ -18,4 +18,5 @@ tags:
 
 
 ## 설정하기
-- [설정하는 방법](/configure/index.html)
+- [간단한 설정법](/configure/index.html)
+- [모든 옵션 설명](/signals/index.html)
