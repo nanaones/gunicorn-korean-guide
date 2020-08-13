@@ -29,7 +29,7 @@ $ sudo npm install -g hexo-cli
 ### 포스트( 새 페이지 )를 만드는 방법
 
 ```
-$ hexo new [layout] <title> 
+# hexo new [layout] <title> 
 $ hexo new post '페이지명'
 ```
 만들어지는 파일은 `source/` 아래에 생깁니다. 

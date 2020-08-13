@@ -19,4 +19,4 @@ tags:
 
 ## 설정하기
 - [간단한 설정법](/configure/index.html)
-- [모든 옵션 설명](/signals/index.html)
+- [모든 설정 옵션들](/signals/index.html)
