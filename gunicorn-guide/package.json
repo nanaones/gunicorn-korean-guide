@@ -5,8 +5,8 @@
   "scripts": {
     "build": "yarn install && hexo g",
     "clean": "hexo clean",
-    "deploy": "hexo deploy",
-    "server": "hexo server"
+    "gen": "hexo clean && hexo g",
+    "start": "hexo server"
   },
   "hexo": {
     "version": "4.2.1"
