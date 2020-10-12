@@ -51,8 +51,6 @@ jobs:
           GITHUB_ACCESS_TOKEN: ${{secrets.TOKEN}}
           SRC_FOLDER:  ${{env.working-directory}}/public
           DEST_OWNER: nanaones
-#           DEST_REPO: nanaones.github.io
-          DEST_REPO: testt
+          DEST_REPO: nanaones.github.io
           DEST_BRANCH: master
           DEST_FOLDER: /
-#           DEST_PREDEPLOY_CLEANUP: "rm gunicorn-guide "
