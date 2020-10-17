@@ -48,7 +48,7 @@ jobs:
       - name: Release build
         uses: hpcodecraft/action-deploy-workspace-to-repo@v2.2
         env:
-          GITHUB_ACCESS_TOKEN: ${{secrets.TOKEN}}
+          GITHUB_ACCESS_TOKEN: ${{secrets.GIT_TOKEN}}
           SRC_FOLDER:  ${{env.working-directory}}/public
           DEST_OWNER: nanaones
           DEST_REPO: nanaones.github.io
