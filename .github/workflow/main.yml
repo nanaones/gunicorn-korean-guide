@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
         working-directory: ./gunicorn-guide 
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
