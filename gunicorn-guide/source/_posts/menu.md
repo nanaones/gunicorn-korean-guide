@@ -25,3 +25,5 @@ tags:
 ## 배포하기
 - [배포를 위한 설정법](/deploy/index.html)
 
+## 사용자를 위한 팁들
+- [사용자를 위한 팁들](/tips/index.html)
